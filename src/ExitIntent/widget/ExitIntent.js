@@ -46,7 +46,7 @@ dojoLang
         postCreate: function () {
             logger.debug(this.id + ".postCreate");
             // window.hooked = window.hooked || false
-            var self = this
+            //var self = this;
             // console.log(this.mxform.navigateTo)
             // console.log(this)
             // var self = this;
@@ -73,19 +73,31 @@ dojoLang
             //     })
             //   }
             // );
-            aspect.around(self.mxform, "navigateTo", dojoLang.hitch(self, self._aroundFunc));
+            this.handle = aspect.around(window.mx.router, "openFormInContent", dojoLang.hitch(this, this._aroundFunc));
 
               // window.hooked = true
             // }
         },
 
-        _aroundFunc: function(originalNav){
+        _aroundFunc: function(origOpenFormInContent){
           console.log('hi');
+          var self = this;
           return function(){
-            // doing something before the original call
-            var deferred = originalNav.apply(self, arguments);
-            // doing something after the original call
-            return deferred;
+            var origNav = origOpenFormInContent;
+            var args = arguments;
+            var theWidget = self;
+            var theRouter = this;
+
+            mx.ui.confirmation({
+                   content:"do you want to save to this customer? (If you select 'no', your changes will not be saved.)",
+                   proceed:"Yes, save",
+                   cancel:"No, discard my changes",
+                   handler: function(){
+                     origNav.apply(theRouter, args);
+                     theWidget._runSaveMicroflow(theWidget._contextObj)
+                   }
+             })
+            return;
           };
         },
 
