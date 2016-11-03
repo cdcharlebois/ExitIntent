@@ -11,11 +11,11 @@ define([
     // "dojo/dom-style",
     // "dojo/dom-construct",
     // "dojo/_base/array",
-    "dojo/_base/lang"
+    "dojo/_base/lang",
     // "dojo/text",
     // "dojo/html",
     // "dojo/_base/event",
-
+	"ExitIntent/widget/lib/ConfirmationDialog2"
 
 ], function (declare,
 _WidgetBase,
@@ -28,10 +28,11 @@ aspect,
 // dojoStyle,
 // dojoConstruct,
 // dojoArray,
-dojoLang
+dojoLang,
 // dojoText,
 // dojoHtml,
 // dojoEvent
+confirmationDialog2
 ) {
     "use strict";
 
@@ -82,20 +83,34 @@ dojoLang
         _aroundFunc: function(origOpenFormInContent){
           console.log('hi');
           var self = this;
+		  var confirm2 = function(args) {
+		                          new confirmationDialog2({
+		                              content: args.content,
+		                              proceed: args.proceed || this.translate("mxui.widget.DialogMessage", "ok"),
+		                              cancel: args.cancel || this.translate("mxui.widget.DialogMessage", "cancel"),
+		                              handler: args.handler,
+									  cancelHandler: args.cancelHandler
+		                          }).show();
+		                      };
+
           return function(){
             var origNav = origOpenFormInContent;
             var args = arguments;
             var theWidget = self;
             var theRouter = this;
 
-            mx.ui.confirmation({
+            confirm2({
                    content:"do you want to save to this customer? (If you select 'no', your changes will not be saved.)",
                    proceed:"Yes, save",
                    cancel:"No, discard my changes",
                    handler: function(){
                      origNav.apply(theRouter, args);
                      theWidget._runSaveMicroflow(theWidget._contextObj)
-                   }
+				 	},
+				   cancelHandler: function() {
+					 console.log("cancel handler");
+					 origNav.apply(theRouter, args);
+				   }
              })
             return;
           };
