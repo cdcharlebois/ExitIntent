@@ -33,6 +33,13 @@ confirmationDialog2) {
 
     return declare("ExitIntent.widget.ExitIntent", [_WidgetBase], {
 
+        // from modeler
+        saveMf: "",
+        cancelMf: "",
+        promptText: "",
+        proceedText: "",
+        cancelText: "",
+
         // Internal variables.
         _handles: null,
         _contextObj: null,
@@ -65,21 +72,32 @@ confirmationDialog2) {
                 var theRouter = this;
 
                 // check for changes
-                var objectsOnPage = self.mxform._formData._getObjectsFromProviders()
-                ,   objectsChanged = objectsOnPage.filter(function(o){return !self._isEmptyObject(mx.data.getChanges(o._guid))})
+                var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o){return o._guid})
+                ,   guidsChanged = false
 
-                if (objectsChanged.length > 0){
+                guidsOnPage.forEach(function(g){
+                  if (!self._isEmptyObject(mx.data.getChanges(g))) {
+                    guidsChanged = true;
+                  }
+                })
+
+                if (guidsChanged){
                   confirm2({
-                      content: "do you want to save to this customer? (If you select 'no', your changes will not be saved.)",
-                      proceed: "Yes, save",
-                      cancel: "No, discard my changes",
+                      content: theWidget.promptText,
+                      proceed: theWidget.proceedText,
+                      cancel: theWidget.cancelText,
                       handler: function() {
                           origNav.apply(theRouter, args);
-                          theWidget._commitChanges(objectsChanged)
+                          theWidget._runSaveMicroflow(self._contextObj)
+                          // theWidget._commitChanges(objectsChanged)
                       },
                       cancelHandler: function() {
-                          console.log("cancel handler");
+                          // console.log("cancel handler");
                           origNav.apply(theRouter, args);
+                          if (self.cancelMf){
+                              theWidget._runCancelMicroflow(self._contextObj)
+                          }
+
                       }
                   })
                 }
@@ -101,36 +119,58 @@ confirmationDialog2) {
             this.handle.remove();
         },
 
-        _commitChanges: function(objects){
-          mx.data.commit({
-            mxobjs: objects,
-            callback: function() {
-              console.log('success')
-            },
-            error: function(err) {
-              console.log(err)
-            }
-          })
-        },
-
-        // _runSaveMicroflow: function(obj) {
-        //     if (!obj)
-        //         return;
-        //     console.log('saving ' + obj.getGuid())
-        //     mx.data.action({
-        //         params: {
-        //             actionname: 'TestSuite.IVK_SaveForgottenPerson',
-        //             applyto: 'selection',
-        //             guids: [obj.getGuid()]
-        //         },
-        //         callback: function(res) {
-        //             console.log('success')
-        //         },
-        //         error: function(err) {
-        //             console.log('err')
-        //         }
-        //     })
+        // striaght commit --
+        // ------------------
+        // use this if you want the widget to commit
+        // ------------------
+        // _commitChanges: function(objects){
+        //   mx.data.commit({
+        //     mxobjs: objects,
+        //     callback: function() {
+        //       console.log('success')
+        //     },
+        //     error: function(err) {
+        //       console.log(err)
+        //     }
+        //   })
         // },
+
+        _runSaveMicroflow: function(obj) {
+            if (!obj)
+                return;
+            console.log('saving ' + obj.getGuid())
+            mx.data.action({
+                params: {
+                    actionname: this.saveMf,
+                    applyto: 'selection',
+                    guids: [obj.getGuid()]
+                },
+                callback: function(res) {
+                    console.log('success')
+                },
+                error: function(err) {
+                    console.log('err')
+                }
+            })
+        },
+        _runCancelMicroflow: function(obj) {
+            if (!obj)
+                return;
+            console.log('saving ' + obj.getGuid())
+            mx.data.action({
+                params: {
+                    actionname: this.cancelMf,
+                    applyto: 'selection',
+                    guids: [obj.getGuid()]
+                },
+                callback: function(res) {
+                    console.log('success')
+                },
+                error: function(err) {
+                    console.log('err')
+                }
+            })
+        },
 
         _isEmptyObject: function(obj){
             for(var prop in obj) {

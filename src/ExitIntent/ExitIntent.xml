@@ -6,10 +6,32 @@
     <icon />
 
     <properties>
-        <property key="dummyKey" type="string" required="false" defaultValue="">
-            <caption>Dummy key</caption>
+        <property key="saveMf" type="microflow" required="true" >
+            <caption>Save Microflow</caption>
+            <category>Behavior</category>
+            <description>this microflow will run when the user chooses to confirm their unsaved changes</description>
+            <returnType type="Void"></returnType>
+        </property>
+        <property key="cancelMf" type="microflow" required="false" >
+            <caption>Cancel Microflow</caption>
+            <category>Behavior</category>
+            <description>this microflow will run when the user chooses to discard their unsaved changes</description>
+            <returnType type="Void"></returnType>
+        </property>
+        <property key="promptText" type="string" required="true" >
+            <caption>Prompt Text</caption>
             <category>Appearance</category>
-            <description>This key was added to make the widget work in the Modeler (needs atleast 1 key). Please change/remove this one</description>
+            <description>This text will appear in the modal when a user tries to navigate away from the page.</description>
+        </property>
+        <property key="proceedText" type="string" required="true" >
+            <caption>Proceed Text</caption>
+            <category>Appearance</category>
+            <description>This text will appear on the "proceed" button.</description>
+        </property>
+        <property key="cancelText" type="string" required="true" >
+            <caption>Cancel Text</caption>
+            <category>Appearance</category>
+            <description>This text will appear on the "cancel" button.</description>
         </property>
     </properties>
 </widget>
