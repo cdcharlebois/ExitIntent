@@ -6,14 +6,14 @@
     <icon />
 
     <properties>
-        <property key="saveMf" type="microflow" required="true" >
-            <caption>Save Microflow</caption>
+        <property key="yesMf" type="microflow" required="true" >
+            <caption>Yes Microflow</caption>
             <category>Behavior</category>
             <description>this microflow will run when the user chooses to confirm their unsaved changes</description>
             <returnType type="Void"></returnType>
         </property>
-        <property key="cancelMf" type="microflow" required="false" >
-            <caption>Cancel Microflow</caption>
+        <property key="noMf" type="microflow" required="false" >
+            <caption>No Microflow</caption>
             <category>Behavior</category>
             <description>this microflow will run when the user chooses to discard their unsaved changes</description>
             <returnType type="Void"></returnType>
@@ -23,11 +23,16 @@
             <category>Appearance</category>
             <description>This text will appear in the modal when a user tries to navigate away from the page.</description>
         </property>
-        <property key="proceedText" type="string" required="true" >
-            <caption>Proceed Text</caption>
+        <property key="yesText" type="string" required="true" >
+            <caption>Yes Text</caption>
             <category>Appearance</category>
-            <description>This text will appear on the "proceed" button.</description>
+            <description>This text will appear on the "yes" button.</description>
         </property>
+		<property key="noText" type="string" required="true" >
+			<caption>No Text</caption>
+			<category>Appearance</category>
+			<description>This text will appear on the "no" button.</description>
+		</property>
         <property key="cancelText" type="string" required="true" >
             <caption>Cancel Text</caption>
             <category>Appearance</category>

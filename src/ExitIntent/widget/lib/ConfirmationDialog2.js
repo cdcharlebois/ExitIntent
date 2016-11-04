@@ -5,29 +5,38 @@ define([
 	var theDialog = declare(dialog, {
 		declaredClass: "ExitIntent.widget.ConfirmationDialog2",
 		cancel: "",
-		proceed: "",
-		handler: null ,
+		yes: "",
+		no: "",
+		yesHandler: null ,
 		cancelHandler: null,
+		noHandler: null,
 		buildRendering: function() {
 			this.caption = this.caption || this.translate("caption");
 			this.inherited(arguments);
 			var cancelBtn = $("button", {
 				"class": "btn"
 			}, this.cancel)
-			  , proceedBtn = $("button", {
+			  , yesBtn = $("button", {
 				"class": "btn btn-primary"
-			}, this.proceed)
+			}, this.yes)
+			  , noBtn = $("button", {
+			  "class": "btn"
+		    }, this.no)
 			  , contentNode = $("p");
 			contentNode.innerHTML = dom.convertNlToBr(dom.escapeString(this.content));
 			this.setContent(contentNode);
-			this.setButtons([proceedBtn, cancelBtn]);
+			this.setButtons([yesBtn, noBtn, cancelBtn]);
 			this.connect(cancelBtn, "click", function() {
 				this.hide();
 				this.cancelHandler();
 			});
-			this.connect(proceedBtn, "click", function() {
+			this.connect(yesBtn, "click", function() {
 				this.hide();
-				this.handler();
+				this.yesHandler();
+			});
+			this.connect(noBtn, "click", function() {
+				this.hide();
+				this.noHandler();
 			});
 		},
 		show: function() {

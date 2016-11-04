@@ -34,11 +34,12 @@ confirmationDialog2) {
     return declare("ExitIntent.widget.ExitIntent", [_WidgetBase], {
 
         // from modeler
-        saveMf: "",
-        cancelMf: "",
+        yesMf: "",
+        noMf: "",
         promptText: "",
-        proceedText: "",
-        cancelText: "",
+        yesText: "",
+		noText: "",
+		cancelText: "",
         modalText: "",
 
         // Internal variables.
@@ -60,10 +61,12 @@ confirmationDialog2) {
                 new confirmationDialog2({
                     caption: args.caption,
                     content: args.content,
-                    proceed: args.proceed || this.translate("mxui.widget.DialogMessage", "ok"),
+                    yes: args.yes || this.translate("mxui.widget.DialogMessage", "ok"),
+					no: args.no,
                     cancel: args.cancel || this.translate("mxui.widget.DialogMessage", "cancel"),
-                    handler: args.handler,
-                    cancelHandler: args.cancelHandler
+                    yesHandler: args.yesHandler,
+					noHandler: args.noHandler,
+					cancelHandler: args.cancelHandler
                 }).show();
             };
 
@@ -87,21 +90,25 @@ confirmationDialog2) {
                   confirm2({
                       caption: theWidget.modalText,
                       content: theWidget.promptText,
-                      proceed: theWidget.proceedText,
-                      cancel: theWidget.cancelText,
-                      handler: function() {
+                      yes: theWidget.yesText,
+					  no: theWidget.noText,
+					  cancel: theWidget.cancelText,
+                      yesHandler: function() {
                           origNav.apply(theRouter, args);
-                          theWidget._runSaveMicroflow(self._contextObj)
+                          theWidget._runMicroflow(self.yesMf, self._contextObj)
                           // theWidget._commitChanges(objectsChanged)
                       },
-                      cancelHandler: function() {
+                      noHandler: function() {
                           // console.log("cancel handler");
                           origNav.apply(theRouter, args);
-                          if (self.cancelMf){
-                              theWidget._runCancelMicroflow(self._contextObj)
+                          if (self.noMf){
+                              theWidget._runMicroflow(self.noMf, self._contextObj)
                           }
 
-                      }
+                      },
+					  cancelHandler: function() {
+
+					  }
                   })
                 }
                 else {
@@ -138,31 +145,13 @@ confirmationDialog2) {
         //   })
         // },
 
-        _runSaveMicroflow: function(obj) {
+        _runMicroflow: function(mf, obj) {
             if (!obj)
                 return;
             console.log('saving ' + obj.getGuid())
             mx.data.action({
                 params: {
-                    actionname: this.saveMf,
-                    applyto: 'selection',
-                    guids: [obj.getGuid()]
-                },
-                callback: function(res) {
-                    console.log('success')
-                },
-                error: function(err) {
-                    console.log('err')
-                }
-            })
-        },
-        _runCancelMicroflow: function(obj) {
-            if (!obj)
-                return;
-            console.log('saving ' + obj.getGuid())
-            mx.data.action({
-                params: {
-                    actionname: this.cancelMf,
+                    actionname: mf,
                     applyto: 'selection',
                     guids: [obj.getGuid()]
                 },
