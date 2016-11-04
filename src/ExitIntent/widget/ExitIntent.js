@@ -38,8 +38,8 @@ confirmationDialog2) {
         noMf: "",
         promptText: "",
         yesText: "",
-		noText: "",
-		cancelText: "",
+        noText: "",
+        cancelText: "",
         modalText: "",
 
         // Internal variables.
@@ -62,11 +62,11 @@ confirmationDialog2) {
                     caption: args.caption,
                     content: args.content,
                     yes: args.yes || this.translate("mxui.widget.DialogMessage", "ok"),
-					no: args.no,
+                    no: args.no,
                     cancel: args.cancel || this.translate("mxui.widget.DialogMessage", "cancel"),
                     yesHandler: args.yesHandler,
-					noHandler: args.noHandler,
-					cancelHandler: args.cancelHandler
+                    noHandler: args.noHandler,
+                    cancelHandler: args.cancelHandler
                 }).show();
             };
 
@@ -77,42 +77,41 @@ confirmationDialog2) {
                 var theRouter = this;
 
                 // check for changes
-                var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o){return o._guid})
-                ,   guidsChanged = false
+                var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o) {
+                        return o._guid
+                    }),
+                    guidsChanged = false
 
-                guidsOnPage.forEach(function(g){
-                  if (!self._isEmptyObject(mx.data.getChanges(g))) {
-                    guidsChanged = true;
-                  }
+                guidsOnPage.forEach(function(g) {
+                    if (!self._isEmptyObject(mx.data.getChanges(g))) {
+                        guidsChanged = true;
+                    }
                 })
 
-                if (guidsChanged){
-                  confirm2({
-                      caption: theWidget.modalText,
-                      content: theWidget.promptText,
-                      yes: theWidget.yesText,
-					  no: theWidget.noText,
-					  cancel: theWidget.cancelText,
-                      yesHandler: function() {
-                          origNav.apply(theRouter, args);
-                          theWidget._runMicroflow(self.yesMf, self._contextObj)
-                          // theWidget._commitChanges(objectsChanged)
-                      },
-                      noHandler: function() {
-                          // console.log("cancel handler");
-                          origNav.apply(theRouter, args);
-                          if (self.noMf){
-                              theWidget._runMicroflow(self.noMf, self._contextObj)
-                          }
+                if (guidsChanged) {
+                    confirm2({
+                        caption: theWidget.modalText,
+                        content: theWidget.promptText,
+                        yes: theWidget.yesText,
+                        no: theWidget.noText,
+                        cancel: theWidget.cancelText,
+                        yesHandler: function() {
+                            // origNav.apply(theRouter, args);
+                            theWidget._runMicroflow(self.yesMf, self._contextObj, origNav, theRouter, args)
+                            // theWidget._commitChanges(objectsChanged)
+                        },
+                        noHandler: function() {
+                            // console.log("cancel handler");
+                            // origNav.apply(theRouter, args);
+                            if (self.noMf) {
+                                theWidget._runMicroflow(self.noMf, self._contextObj, origNav, theRouter, args)
+                            }
 
-                      },
-					  cancelHandler: function() {
-
-					  }
-                  })
-                }
-                else {
-                  origNav.apply(theRouter, args);
+                        },
+                        cancelHandler: function() {}
+                    })
+                } else {
+                    origNav.apply(theRouter, args);
                 }
                 return;
             };
@@ -145,10 +144,9 @@ confirmationDialog2) {
         //   })
         // },
 
-        _runMicroflow: function(mf, obj) {
-            if (!obj)
-                return;
-            console.log('saving ' + obj.getGuid())
+        _runMicroflow: function(mf, obj, cb, scope, args) {
+            if (!obj) return;
+            // console.log('saving ' + obj.getGuid())
             mx.data.action({
                 params: {
                     actionname: mf,
@@ -156,7 +154,8 @@ confirmationDialog2) {
                     guids: [obj.getGuid()]
                 },
                 callback: function(res) {
-                    console.log('success')
+                    // console.log('success')
+                    cb.apply(scope, args);
                 },
                 error: function(err) {
                     console.log('err')
@@ -164,11 +163,11 @@ confirmationDialog2) {
             })
         },
 
-        _isEmptyObject: function(obj){
-            for(var prop in obj) {
-              if(obj.hasOwnProperty(prop))
-              return false;
-            }
+        _isEmptyObject: function(obj) {
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop))
+                    return false;
+                }
             return JSON.stringify(obj) === JSON.stringify({});
         }
 
