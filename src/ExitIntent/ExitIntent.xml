@@ -33,5 +33,10 @@
             <category>Appearance</category>
             <description>This text will appear on the "cancel" button.</description>
         </property>
+        <property key="modalText" type="string" required="true" >
+            <caption>Modal Header Text</caption>
+            <category>Appearance</category>
+            <description>This text will appear header of the modal.</description>
+        </property>
     </properties>
 </widget>

@@ -39,6 +39,7 @@ confirmationDialog2) {
         promptText: "",
         proceedText: "",
         cancelText: "",
+        modalText: "",
 
         // Internal variables.
         _handles: null,
@@ -57,6 +58,7 @@ confirmationDialog2) {
             var self = this;
             var confirm2 = function(args) {
                 new confirmationDialog2({
+                    caption: args.caption,
                     content: args.content,
                     proceed: args.proceed || this.translate("mxui.widget.DialogMessage", "ok"),
                     cancel: args.cancel || this.translate("mxui.widget.DialogMessage", "cancel"),
@@ -83,6 +85,7 @@ confirmationDialog2) {
 
                 if (guidsChanged){
                   confirm2({
+                      caption: theWidget.modalText,
                       content: theWidget.promptText,
                       proceed: theWidget.proceedText,
                       cancel: theWidget.cancelText,
