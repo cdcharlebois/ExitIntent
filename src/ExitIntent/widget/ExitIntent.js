@@ -34,6 +34,7 @@ confirmationDialog2) {
     return declare("ExitIntent.widget.ExitIntent", [_WidgetBase], {
 
         // from modeler
+        changesMf: "",
         yesMf: "",
         noMf: "",
         promptText: "",
@@ -77,42 +78,58 @@ confirmationDialog2) {
                 var theRouter = this;
 
                 // check for changes
-                var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o) {
-                        return o._guid
-                    }),
-                    guidsChanged = false
+                // var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o) {
+                //         return o._guid
+                //     }),
+                //     guidsChanged = false
+                //
+                // guidsOnPage.forEach(function(g) {
+                //     if (!self._isEmptyObject(mx.data.getChanges(g))) {
+                //         guidsChanged = true;
+                //     }
+                // })
 
-                guidsOnPage.forEach(function(g) {
-                    if (!self._isEmptyObject(mx.data.getChanges(g))) {
-                        guidsChanged = true;
+                mx.data.action({
+                  params: {
+                    actionname: theWidget.changesMf,
+                    applyto: 'selection',
+                    guids: [theWidget._contextObj.getGuid()]
+                  },
+                  callback: function(guidsChanged){
+                    console.log(guidsChanged)
+                    if (guidsChanged) {
+                        confirm2({
+                            caption: theWidget.modalText,
+                            content: theWidget.promptText,
+                            yes: theWidget.yesText,
+                            no: theWidget.noText,
+                            cancel: theWidget.cancelText,
+                            yesHandler: function() {
+                                // origNav.apply(theRouter, args);
+                                theWidget._runMicroflow(self.yesMf, self._contextObj, origNav, theRouter, args)
+                                // theWidget._commitChanges(objectsChanged)
+                            },
+                            noHandler: function() {
+                                // console.log("cancel handler");
+                                // origNav.apply(theRouter, args);
+                                if (self.noMf) {
+                                    theWidget._runMicroflow(self.noMf, self._contextObj, origNav, theRouter, args)
+                                }
+
+                            },
+                            cancelHandler: function() {}
+                        })
+                    } else {
+                        origNav.apply(theRouter, args);
                     }
-                })
 
-                if (guidsChanged) {
-                    confirm2({
-                        caption: theWidget.modalText,
-                        content: theWidget.promptText,
-                        yes: theWidget.yesText,
-                        no: theWidget.noText,
-                        cancel: theWidget.cancelText,
-                        yesHandler: function() {
-                            // origNav.apply(theRouter, args);
-                            theWidget._runMicroflow(self.yesMf, self._contextObj, origNav, theRouter, args)
-                            // theWidget._commitChanges(objectsChanged)
-                        },
-                        noHandler: function() {
-                            // console.log("cancel handler");
-                            // origNav.apply(theRouter, args);
-                            if (self.noMf) {
-                                theWidget._runMicroflow(self.noMf, self._contextObj, origNav, theRouter, args)
-                            }
+                  },
+                  error: function(err){
+                    console.log(err)
+                  }
+                });
 
-                        },
-                        cancelHandler: function() {}
-                    })
-                } else {
-                    origNav.apply(theRouter, args);
-                }
+
                 return;
             };
         },

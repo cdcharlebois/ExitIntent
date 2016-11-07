@@ -6,6 +6,12 @@
     <icon />
 
     <properties>
+      <property key="changesMf" type="microflow" required="true" >
+          <caption>Changes Microflow</caption>
+          <category>Behavior</category>
+          <description>this microflow will run to determine if your form has changes</description>
+          <returnType type="Void"></returnType>
+      </property>
         <property key="yesMf" type="microflow" required="true" >
             <caption>Yes Microflow</caption>
             <category>Behavior</category>
