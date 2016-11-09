@@ -1,8 +1,8 @@
 define([
-    "mxui/widget/Dialog", "mxui/dom", "mendix/logger", "dojo/_base/declare"
-], function (dialog, dom, logger, declare) {
+    "mxui/dom", "dojo/_base/declare"
+], function (dom, declare) {
 	var $ = dom.create;
-	var theDialog = declare(dialog, {
+	var theDialog = declare(mxui.widget.Dialog, {
 		declaredClass: "ExitIntent.widget.ConfirmationDialog2",
 		cancel: "",
 		yes: "",
