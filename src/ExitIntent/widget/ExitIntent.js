@@ -46,13 +46,14 @@ define([
         // Internal variables.
         _handles: null,
         _contextObj: null,
+        _pageForm: null,
 
         postCreate: function() {
             // console.log(this)
             logger.debug(this.id + ".postCreate");
 
             this.handle = aspect.around(window.mx.router, "openFormInContent", dojoLang.hitch(this, this._aroundFunc));
-
+            this._pageForm = this.mxform;
         },
 
         _aroundFunc: function(origOpenFormInContent) {
@@ -167,8 +168,9 @@ define([
                 params: {
                     actionname: mf,
                     applyto: 'selection',
-                    guids: [obj.getGuid()]
+                    guids: [obj.getGuid()],
                 },
+                origin: this._pageForm,
                 callback: function(res) {
                     // should the navigation occur?
                     // @since Apr 17, 2018
