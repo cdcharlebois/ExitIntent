@@ -15,14 +15,14 @@
         <property key="yesMf" type="microflow" required="true" >
             <caption>Yes Microflow</caption>
             <category>Behavior</category>
-            <description>this microflow will run when the user chooses to confirm their unsaved changes</description>
-            <returnType type="Void"></returnType>
+            <description>this microflow will run when the user chooses to confirm their unsaved changes. If the microflow returns false, the navigation will be cancelled.</description>
+            <returnType type="Boolean"></returnType>
         </property>
         <property key="noMf" type="microflow" required="false" >
             <caption>No Microflow</caption>
             <category>Behavior</category>
-            <description>this microflow will run when the user chooses to discard their unsaved changes</description>
-            <returnType type="Void"></returnType>
+            <description>this microflow will run when the user chooses to discard their unsaved changes. If the microflow returns false, the navigation will be cancelled.</description>
+            <returnType type="Boolean"></returnType>
         </property>
         <property key="promptText" type="string" required="true" >
             <caption>Prompt Text</caption>

@@ -1,12 +1,11 @@
 {
   "name": "ExitIntent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shows a prompt when a user is about to navigate away from this Mendix page, and actions can be taken based on the user's response",
   "license": "Apache 2",
   "author": "Conner Charlebois",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "del": "^2.2.2",
     "gulp": "^3.9.1",

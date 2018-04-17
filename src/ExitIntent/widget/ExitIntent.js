@@ -16,19 +16,19 @@ define([
     "ExitIntent/widget/lib/ConfirmationDialog2"
 
 ], function(declare, _WidgetBase, aspect,
-// dom,
-// dojoDom,
-// dojoProp,
-// dojoGeometry,
-// dojoClass,
-// dojoStyle,
-// dojoConstruct,
-// dojoArray,
-dojoLang,
-// dojoText,
-// dojoHtml,
-// dojoEvent
-confirmationDialog2) {
+    // dom,
+    // dojoDom,
+    // dojoProp,
+    // dojoGeometry,
+    // dojoClass,
+    // dojoStyle,
+    // dojoConstruct,
+    // dojoArray,
+    dojoLang,
+    // dojoText,
+    // dojoHtml,
+    // dojoEvent
+    confirmationDialog2) {
     "use strict";
 
     return declare("ExitIntent.widget.ExitIntent", [_WidgetBase], {
@@ -90,45 +90,44 @@ confirmationDialog2) {
                 // })
 
                 mx.data.action({
-                  params: {
-                    actionname: theWidget.changesMf,
-                    applyto: 'selection',
-                    guids: [theWidget._contextObj.getGuid()]
-                  },
-                  callback: function(guidsChanged){
-                    console.log(guidsChanged)
-                    if (guidsChanged) {
-                        confirm2({
-                            caption: theWidget.modalText,
-                            content: theWidget.promptText,
-                            yes: theWidget.yesText,
-                            no: theWidget.noText,
-                            cancel: theWidget.cancelText,
-                            yesHandler: function() {
-                                // origNav.apply(theRouter, args);
-                                theWidget._runMicroflow(self.yesMf, self._contextObj, origNav, theRouter, args)
-                                // theWidget._commitChanges(objectsChanged)
-                            },
-                            noHandler: function() {
-                                // console.log("cancel handler");
-                                // origNav.apply(theRouter, args);
-                                if (self.noMf) {
-                                    theWidget._runMicroflow(self.noMf, self._contextObj, origNav, theRouter, args)
-                                }
+                    params: {
+                        actionname: theWidget.changesMf,
+                        applyto: 'selection',
+                        guids: [theWidget._contextObj.getGuid()]
+                    },
+                    callback: function(guidsChanged) {
+                        console.log(guidsChanged)
+                        if (guidsChanged) {
+                            confirm2({
+                                caption: theWidget.modalText,
+                                content: theWidget.promptText,
+                                yes: theWidget.yesText,
+                                no: theWidget.noText,
+                                cancel: theWidget.cancelText,
+                                yesHandler: function() {
+                                    // origNav.apply(theRouter, args);
+                                    theWidget._runMicroflow(self.yesMf, self._contextObj, origNav, theRouter, args)
+                                        // theWidget._commitChanges(objectsChanged)
+                                },
+                                noHandler: function() {
+                                    // console.log("cancel handler");
+                                    // origNav.apply(theRouter, args);
+                                    if (self.noMf) {
+                                        theWidget._runMicroflow(self.noMf, self._contextObj, origNav, theRouter, args)
+                                    }
 
-                            },
-                            cancelHandler: function() {}
-                        })
-                    } else {
-                        origNav.apply(theRouter, args);
+                                },
+                                cancelHandler: function() {}
+                            })
+                        } else {
+                            origNav.apply(theRouter, args);
+                        }
+
+                    },
+                    error: function(err) {
+                        console.log(err)
                     }
-
-                  },
-                  error: function(err){
-                    console.log(err)
-                  }
                 });
-
 
                 return;
             };
@@ -171,8 +170,13 @@ confirmationDialog2) {
                     guids: [obj.getGuid()]
                 },
                 callback: function(res) {
-                    // console.log('success')
-                    cb.apply(scope, args);
+                    // should the navigation occur?
+                    // @since Apr 17, 2018
+                    if (res) {
+                        cb.apply(scope, args);
+                    } else {
+                        console.debug("We're cancelling the navigation because the handler function returned false.");
+                    }
                 },
                 error: function(err) {
                     console.log('err')
@@ -184,7 +188,7 @@ confirmationDialog2) {
             for (var prop in obj) {
                 if (obj.hasOwnProperty(prop))
                     return false;
-                }
+            }
             return JSON.stringify(obj) === JSON.stringify({});
         }
 
