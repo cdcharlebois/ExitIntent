@@ -5,6 +5,7 @@
  * Upgrade to work with Mx 7.15
  * - change name of advisor target from mx.router.openFormInContent to mx.ui.openPage
  * - return a promise from advisor function
+ * - add a handle to the close page button
  * --- /@since ---
  */
 define([
@@ -62,6 +63,7 @@ define([
                 logger.debug(this.id + ".postCreate");
 
                 this.handle = aspect.around(window.mx.ui, "openPage", dojoLang.hitch(this, this._aroundFunc));
+                this.handle2 = aspect.around(window.mx.ui.getContentForm(), "close", dojoLang.hitch(this, this._aroundFunc));
                 this._pageForm = this.mxform;
             },
 
@@ -152,6 +154,7 @@ define([
 
             uninitialize: function () {
                 this.handle.remove();
+                this.handle2.remove();
             },
 
             // striaght commit --
