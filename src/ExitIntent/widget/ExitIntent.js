@@ -61,8 +61,9 @@ define([
             postCreate: function () {
                 // console.log(this)
                 logger.debug(this.id + ".postCreate");
-
-                this.handle = aspect.around(window.mx.ui, "openPage", dojoLang.hitch(this, this._aroundFunc));
+            
+                // Changed openPage to openForm2 -- This might be a error in mendix API, so if they fix this it has to be renamed back.
+                this.handle = aspect.around(window.mx.ui, "openForm2", dojoLang.hitch(this, this._aroundFunc));
                 this.handle2 = aspect.around(window.mx.ui.getContentForm(), "close", dojoLang.hitch(this, this._aroundFunc));
                 this._pageForm = this.mxform;
             },
