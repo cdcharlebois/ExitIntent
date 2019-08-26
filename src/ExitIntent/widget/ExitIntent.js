@@ -62,8 +62,13 @@ define([
                 // console.log(this)
                 logger.debug(this.id + ".postCreate");
             
-                // Changed openPage to openForm2 -- This might be a error in mendix API, so if they fix this it has to be renamed back.
-                this.handle = aspect.around(window.mx.ui, "openForm2", dojoLang.hitch(this, this._aroundFunc));
+                if(window.mx.ui.openPage) {
+                    this.handle = aspect.around(window.mx.ui, "openPage", dojoLang.hitch(this, this._aroundFunc));
+                } else if (window.mx.ui.openForm2) {
+                    this.handle = aspect.around(window.mx.ui, "openForm2", dojoLang.hitch(this, this._aroundFunc));
+                } else {
+                    console.error("Could not find the mx api function that opens a page (openPage or openForm2");
+                }
                 this.handle2 = aspect.around(window.mx.ui.getContentForm(), "close", dojoLang.hitch(this, this._aroundFunc));
                 this._pageForm = this.mxform;
             },
