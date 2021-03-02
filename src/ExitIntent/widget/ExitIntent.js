@@ -117,17 +117,16 @@ define([
                 var theWidget = self;
                 var theRouter = this;
 
-                // check for changes
-                // var guidsOnPage = self.mxform._formData._getObjectsFromProviders().map(function(o) {
-                //         return o._guid
-                //     }),
-                //     guidsChanged = false
-                //
-                // guidsOnPage.forEach(function(g) {
-                //     if (!self._isEmptyObject(mx.data.getChanges(g))) {
-                //         guidsChanged = true;
-                //     }
-                // })
+                // only intercept if we're opening a new page in content
+                if (
+                    args[4] &&
+                    args[4].location &&
+                    args[4].location !== "content"
+                ) {
+                    // do the normal thing
+                    origNav.apply(theRouter, args);
+                    return Promise.resolve();
+                }
 
                 mx.data.action({
                     params: {
