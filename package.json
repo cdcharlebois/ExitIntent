@@ -1,6 +1,6 @@
 {
   "name": "ExitIntent",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "description": "Shows a prompt when a user is about to navigate away from this Mendix page, and actions can be taken based on the user's response",
   "license": "Apache 2",
   "author": "Conner Charlebois",
